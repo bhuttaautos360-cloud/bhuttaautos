@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bhutta Autos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1e;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --surface3: #1f2d44;
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --purple: #8b5cf6;
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #475569;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--font-body);color:var(--text);font-size:14px}
+
+/* Layout */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:transform 0.3s ease}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:20px}
+
+/* Sidebar */
+.sidebar-logo{padding:20px 16px 12px;border-bottom:1px solid var(--border)}
+.logo-text{font-family:var(--font-head);font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500;letter-spacing:1px;text-transform:uppercase}
+.nav-section{padding:12px 8px 4px;font-size:10px;color:var(--text3);font-weight:600;letter-spacing:1px;text-transform:uppercase;padding-left:12px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;color:var(--text2);margin:1px 8px;font-size:13px;font-weight:500;transition:all 0.15s}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(6,182,212,0.1));color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.version-badge{background:var(--surface2);border-radius:var(--radius-sm);padding:8px 10px;font-size:10px;color:var(--text3)}
+
+/* Topbar */
+.menu-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px;font-size:20px}
+.page-title{font-family:var(--font-head);font-size:16px;font-weight:700;flex:1}
+.topbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.btn{padding:7px 14px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:var(--font-body);font-size:12px;font-weight:500;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#2563eb}
+.btn-ghost{background:var(--surface2);color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--text);background:var(--surface3)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-danger{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+
+/* Cards & Metrics */
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.card-sm{padding:12px}
+.metric-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;position:relative;overflow:hidden}
+.metric-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 var(--radius) 0 60px;opacity:0.1}
+.metric-card.blue::before{background:var(--accent)}
+.metric-card.green::before{background:var(--green)}
+.metric-card.red::before{background:var(--red)}
+.metric-card.amber::before{background:var(--amber)}
+.metric-card.purple::before{background:var(--purple)}
+.metric-lbl{font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.metric-val{font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--text)}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* Table */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+th{background:var(--surface2);padding:10px 12px;text-align:left;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+td{padding:10px 12px;border-top:1px solid var(--border);color:var(--text2);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,0.02);color:var(--text)}
+.td-bold{font-weight:500;color:var(--text)}
+.td-sub{font-size:10px;color:var(--text3);margin-top:1px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.3px}
+.badge-green{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.2)}
+.badge-red{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
+.badge-amber{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.2)}
+.badge-blue{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.2)}
+.badge-purple{background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.2)}
+.badge-gray{background:rgba(148,163,184,0.1);color:var(--text3);border:1px solid var(--border)}
+
+/* Forms */
+.form-grid{display:grid;gap:12px}
+.form-grid-2{grid-template-columns:1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.form-input{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color 0.15s;width:100%}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input option{background:var(--surface2)}
+.form-calc{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:#60a5fa;margin-top:4px}
+
+/* Section */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-family:var(--font-head);font-size:15px;font-weight:700}
+.section-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* Alert */
+.alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;margin-bottom:12px;line-height:1.6;border:1px solid}
+.alert-info{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);color:#93c5fd}
+.alert-success{background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.2);color:#6ee7b7}
+.alert-warn{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:#fcd34d}
+.alert-danger{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:#fca5a5}
+
+/* Progress */
+.progress{background:var(--surface3);border-radius:20px;height:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.3s}
+
+/* Month filter */
+.month-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.month-pill{padding:4px 12px;border-radius:20px;border:1px solid var(--border2);background:transparent;font-size:11px;cursor:pointer;color:var(--text3);font-family:var(--font-body);transition:all 0.15s}
+.month-pill.active{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:#60a5fa}
+
+/* Modal overlay */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:16px}
+.modal-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+
+/* Sidebar overlay mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:49}
+
+/* Totals row */
+.tfoot-row td{background:var(--surface2);font-weight:600;color:var(--text);border-top:2px solid var(--border2)}
+
+/* Colors */
+.c-green{color:var(--green)}
+.c-red{color:var(--red)}
+.c-amber{color:var(--amber)}
+.c-blue{color:var(--accent)}
+
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.empty-title{font-size:14px;font-weight:500;color:var(--text2);margin-bottom:4px}
+
+/* Mobile */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;left:0;height:100%;z-index:50;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .menu-btn{display:flex}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .form-grid-2{grid-template-columns:1fr}
+  .content{padding:14px}
+  .modal{margin:0;border-radius:var(--radius) var(--radius) 0 0;max-height:85vh}
+  .modal-overlay{align-items:flex-end;padding:0}
+  table{min-width:400px}
+}
+@media(max-width:480px){
+  .grid-4,.grid-3,.grid-2{grid-template-columns:1fr 1fr}
+  .metric-val{font-size:18px}
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:4px}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-anim{animation:fadeIn 0.2s ease}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">Bhutta Autos</div>
+      <div class="logo-sub" style="line-height:1.6">Shahjamal Road, Mondka<br>Distt. Muzaffargarh</div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:10px;color:#60a5fa;margin-bottom:3px">👤 Amir Bhutta</div>
+        <div style="font-size:10px;color:#94a3b8;margin-bottom:5px">0300-1790602</div>
+        <div style="font-size:10px;color:#60a5fa;margin-bottom:3px">👤 Zain Bhutta</div>
+        <div style="font-size:10px;color:#94a3b8">0300-1232952</div>
+      </div>
+    </div>
+    <div style="overflow-y:auto;flex:1">
+      <div class="nav-section">Main</div>
+      <div class="nav-item active" onclick="navigate('dashboard')"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="navigate('customers')"><div class="nav-icon">👥</div>Customers</div>
+      <div class="nav-item" onclick="navigate('installments')"><div class="nav-icon">📅</div>Installments</div>
+      <div class="nav-section">Finance</div>
+      <div class="nav-item" onclick="navigate('receivable')"><div class="nav-icon">💰</div>Receivable</div>
+      <div class="nav-item" onclick="navigate('cashbook')"><div class="nav-icon">📒</div>Cash Book</div>
+      <div class="nav-item" onclick="navigate('expenses')"><div class="nav-icon">💸</div>Expenses</div>
+      <div class="nav-section">Inventory</div>
+      <div class="nav-item" onclick="navigate('suppliers')"><div class="nav-icon">🏭</div>Suppliers</div>
+      <div class="nav-item" onclick="navigate('products')"><div class="nav-icon">🏍️</div>Products</div>
+      <div class="nav-section">Records</div>
+      <div class="nav-item" onclick="navigate('advances')"><div class="nav-icon">⬆️</div>Advances</div>
+      <div class="nav-item" onclick="navigate('reports')"><div class="nav-icon">📈</div>Reports</div>
+      <div class="nav-item" onclick="navigate('import')"><div class="nav-icon">📥</div>Import Data</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="version-badge">
+        <div style="font-weight:600;color:var(--text2);margin-bottom:2px">Bhutta Autos v1.0</div>
+        <div style="line-height:1.6">Mondka, Distt. Muzaffargarh<br>Amir: 0300-1790602<br>Zain: 0300-1232952</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main -->
+  <div class="main">
+    <div style="background:linear-gradient(90deg,#1e3a5f,#0f2744);border-bottom:1px solid rgba(59,130,246,0.3);padding:5px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;flex-wrap:wrap;gap:4px">
+      <div><span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#93c5fd">Bhutta Autos</span><span style="font-size:10px;color:#475569;margin-left:8px">Shahjamal Road, Mondka · Distt. Muzaffargarh</span></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap"><span style="font-size:10px;color:#60a5fa">Amir Bhutta: 0300-1790602</span><span style="font-size:10px;color:#60a5fa">Zain Bhutta: 0300-1232952</span></div>
+    </div>
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="page-title" id="page-title">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇ Export</button>
+        <button class="btn btn-primary btn-sm" id="top-add-btn" onclick="topAdd()">+ Add</button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-title" id="modal-title">Add Record</div>
+    <div id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// ==================== DATA LAYER ====================
+const DB_KEY = 'bhuttaautos_v1';
+
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return getDefaultDB();
+}
+
+function saveDB() {
+  try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
+}
+
+function getDefaultDB() {
+  return {
+    customers: [
+      {id:1,name:'Ahmed Ali',cnic:'35202-1234567-1',phone:'0300-1234567',address:'Lahore',guarantor:'Tariq Mehmood',guarantorPhone:'0311-9876543',bike:'Honda CD 70',bikeColor:'Red',engineNo:'EN123456',chassisNo:'CH789012',salePrice:145000,downPayment:30000,tenure:12,startDate:'2024-08-01',status:'active'},
+      {id:2,name:'Bilal Hassan',cnic:'35202-7654321-2',phone:'0333-7654321',address:'Gujranwala',guarantor:'Kamran Iqbal',guarantorPhone:'0321-1112222',bike:'Yamaha YBR 125',bikeColor:'Blue',engineNo:'EN654321',chassisNo:'CH321098',salePrice:210000,downPayment:50000,tenure:18,startDate:'2024-05-15',status:'active'},
+      {id:3,name:'Zafar Iqbal',cnic:'35202-1111111-3',phone:'0321-5555555',address:'Faisalabad',guarantor:'Asif Raza',guarantorPhone:'0300-4444444',bike:'Honda CG 125',bikeColor:'Black',engineNo:'EN111222',chassisNo:'CH333444',salePrice:175000,downPayment:40000,tenure:12,startDate:'2024-01-10',status:'paid'},
+      {id:4,name:'Rashid Mehmood',cnic:'35202-2222222-4',phone:'0345-6666666',address:'Sialkot',guarantor:'Usman Ali',guarantorPhone:'0333-7777777',bike:'Honda CD 70',bikeColor:'Green',engineNo:'EN222333',chassisNo:'CH555666',salePrice:130000,downPayment:25000,tenure:6,startDate:'2024-11-01',status:'late'},
+    ],
+    payments: [
+      {id:1,customerId:1,amount:9583,date:'2024-09-01',month:'Sep 2024',mode:'cash',notes:''},
+      {id:2,customerId:1,amount:9583,date:'2024-10-01',month:'Oct 2024',mode:'cash',notes:''},
+      {id:3,customerId:2,amount:8889,date:'2024-06-15',month:'Jun 2024',mode:'easypaisa',notes:''},
+      {id:4,customerId:3,amount:11250,date:'2024-02-10',month:'Feb 2024',mode:'cash',notes:''},
+      {id:5,customerId:3,amount:135000,date:'2024-12-10',month:'Full payment',mode:'bank',notes:'Full settlement'},
+    ],
+    suppliers: [
+      {id:1,name:'Honda Atlas Pakistan',contact:'Malik Tariq',phone:'042-35123456',city:'Lahore',email:'sales@hondaatlas.pk',ntn:'1234567-8',paymentTerms:'30 days',status:'active',notes:'Main Honda dealer'},
+      {id:2,name:'Yamaha Motor Pakistan',contact:'Arif Hussain',phone:'021-34567890',city:'Karachi',email:'info@yamahapk.com',ntn:'9876543-2',paymentTerms:'15 days',status:'active',notes:''},
+      {id:3,name:'Ravi Autos',contact:'Shahid Raza',phone:'041-22334455',city:'Faisalabad',email:'',ntn:'',paymentTerms:'Cash',status:'active',notes:'Spare parts'},
+    ],
+    products: [
+      {id:1,supplierId:1,name:'Honda CD 70',category:'bike',purchasePrice:112000,salePrice:125000,stock:5,unit:'unit',minStock:2,notes:''},
+      {id:2,supplierId:1,name:'Honda CG 125',category:'bike',purchasePrice:148000,salePrice:165000,stock:3,unit:'unit',minStock:2,notes:''},
+      {id:3,supplierId:2,name:'Yamaha YBR 125',category:'bike',purchasePrice:185000,salePrice:205000,stock:2,unit:'unit',minStock:1,notes:''},
+      {id:4,supplierId:3,name:'Engine Oil 4T',category:'parts',purchasePrice:1200,salePrice:1800,stock:40,unit:'bottle',minStock:10,notes:''},
+      {id:5,supplierId:3,name:'Chain & Sprocket Kit',category:'parts',purchasePrice:2500,salePrice:3500,stock:1,unit:'set',minStock:5,notes:'Low stock'},
+    ],
+    advances: [
+      {id:1,type:'received',name:'Imran Shah',phone:'0312-9988776',amount:20000,adjustedAmount:0,date:'2024-12-01',purpose:'Booking Honda CD 70',productId:1,status:'pending',notes:''},
+      {id:2,type:'paid',name:'Honda Atlas Pakistan',phone:'042-35123456',amount:500000,adjustedAmount:350000,date:'2024-12-05',purpose:'Advance order 5 bikes',productId:1,status:'partial',notes:''},
+    ],
+    cashEntries: [
+      {id:1,date:'2025-03-01',type:'in',category:'installment',desc:'Installment — Ahmed Ali Mar 2025',amount:9583,ref:'INS-001'},
+      {id:2,date:'2025-03-03',type:'out',category:'expense',desc:'Petrol & conveyance',amount:2500,ref:'EXP-001'},
+      {id:3,date:'2025-03-07',type:'in',category:'sale',desc:'Bike sale — Honda CD 70',amount:125000,ref:'SALE-001'},
+      {id:4,date:'2025-03-10',type:'out',category:'expense',desc:'Shop rent March 2025',amount:25000,ref:'EXP-002'},
+      {id:5,date:'2025-03-15',type:'in',category:'installment',desc:'Installment — Bilal Hassan Mar 2025',amount:8889,ref:'INS-002'},
+      {id:6,date:'2025-03-21',type:'out',category:'expense',desc:'Staff salary',amount:18000,ref:'EXP-003'},
+    ],
+    expenses: [
+      {id:1,date:'2025-01-05',category:'rent',desc:'Shop rent Jan',amount:25000,payMode:'cash'},
+      {id:2,date:'2025-01-10',category:'salary',desc:'Staff salary Jan',amount:18000,payMode:'cash'},
+      {id:3,date:'2025-01-15',category:'utility',desc:'Electricity Jan',amount:3800,payMode:'cash'},
+      {id:4,date:'2025-02-05',category:'rent',desc:'Shop rent Feb',amount:25000,payMode:'cash'},
+      {id:5,date:'2025-02-10',category:'salary',desc:'Staff salary Feb',amount:18000,payMode:'cash'},
+      {id:6,date:'2025-03-05',category:'rent',desc:'Shop rent Mar',amount:25000,payMode:'cash'},
+      {id:7,date:'2025-03-10',category:'salary',desc:'Staff salary Mar',amount:18000,payMode:'cash'},
+      {id:8,date:'2025-03-14',category:'utility',desc:'Electricity Mar',amount:4200,payMode:'cash'},
+    ],
+    nextId: {customers:5,payments:6,suppliers:4,products:6,advances:3,cashEntries:7,expenses:9}
+  };
+}
+
+let db = loadDB();
+
+// ==================== HELPERS ====================
+const fmt = n => 'Rs ' + Math.round(n||0).toLocaleString();
+const initials = n => (n||'').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const today = () => new Date().toISOString().split('T')[0];
+const monthStr = d => { const dt=new Date(d); return dt.toLocaleString('en-PK',{month:'short',year:'numeric'}); };
+const nextId = key => { const id=db.nextId[key]||1; db.nextId[key]=(id+1); saveDB(); return id; };
+const getMonthly = c => Math.round((c.salePrice-c.downPayment)/c.tenure);
+const getPaid = cId => db.payments.filter(p=>p.customerId===cId).reduce((s,p)=>s+p.amount,0);
+const getRemaining = c => Math.max(0,c.salePrice-c.downPayment-getPaid(c.id));
+const getSupplier = id => db.suppliers.find(s=>s.id===id)||{name:'—'};
+const statusBadge = s => {
+  if(s==='active') return '<span class="badge badge-green">Active</span>';
+  if(s==='paid') return '<span class="badge badge-blue">Paid</span>';
+  if(s==='late') return '<span class="badge badge-red">Late</span>';
+  if(s==='pending') return '<span class="badge badge-amber">Pending</span>';
+  if(s==='partial') return '<span class="badge badge-amber">Partial</span>';
+  if(s==='adjusted') return '<span class="badge badge-blue">Adjusted</span>';
+  if(s==='inactive') return '<span class="badge badge-gray">Inactive</span>';
+  return `<span class="badge badge-gray">${s||'—'}</span>`;
+};
+
+// ==================== NAVIGATION ====================
+let currentPage = 'dashboard';
+let currentMonth = new Date().toLocaleString('en-PK',{month:'short',year:'numeric'});
+
+const pageTitles = {
+  dashboard:'Dashboard',customers:'Customers',installments:'Installments',
+  receivable:'Monthly Receivable',cashbook:'Cash Book',expenses:'Expenses',
+  suppliers:'Suppliers',products:'Products',advances:'Advances',
+  reports:'Reports',import:'Import Data'
+};
+
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim().toLowerCase().includes(page.toLowerCase().replace('receivable','receiv').replace('cashbook','cash').replace('installments','install').replace('import','import')));
+  });
+  document.getElementById('page-title').textContent = pageTitles[page]||page;
+  closeSidebar();
+  renderPage();
+}
+
+function renderPage() {
+  const el = document.getElementById('content');
+  el.classList.remove('page-anim');
+  void el.offsetWidth;
+  el.classList.add('page-anim');
+  const pages = {
+    dashboard: renderDashboard,
+    customers: renderCustomers,
+    installments: renderInstallments,
+    receivable: renderReceivable,
+    cashbook: renderCashbook,
+    expenses: renderExpenses,
+    suppliers: renderSuppliers,
+    products: renderProducts,
+    advances: renderAdvances,
+    reports: renderReports,
+    import: renderImport,
+  };
+  el.innerHTML = (pages[currentPage]||renderDashboard)();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ==================== MODAL ====================
+function openModal(title, bodyHTML, actions) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHTML;
+  document.getElementById('modal-actions').innerHTML = actions||`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+function topAdd() {
+  const addFns = {
+    customers:()=>showAddCustomer(),
+    suppliers:()=>showAddSupplier(),
+    products:()=>showAddProduct(),
+    expenses:()=>showAddExpense(),
+    cashbook:()=>showAddCashEntry(),
+    advances:()=>showAddAdvance(),
+    receivable:()=>showRecordPayment(),
+    installments:()=>showRecordPayment(),
+  };
+  (addFns[currentPage]||showAddCustomer)();
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  const totalPortfolio = db.customers.reduce((s,c)=>s+c.salePrice,0);
+  const totalCollected = db.customers.reduce((s,c)=>s+getPaid(c.id)+c.downPayment,0);
+  const totalOutstanding = db.customers.reduce((s,c)=>s+getRemaining(c),0);
+  const activeCount = db.customers.filter(c=>c.status==='active'||c.status==='late').length;
+  const lateCount = db.customers.filter(c=>c.status==='late').length;
+  const inventoryVal = db.products.reduce((s,p)=>s+p.purchasePrice*p.stock,0);
+  const thisMonthExp = db.expenses.filter(e=>monthStr(e.date)===currentMonth).reduce((s,e)=>s+e.amount,0);
+  const lowStock = db.products.filter(p=>p.stock<=p.minStock).length;
+
+  return `
+  <div class="grid grid-4" style="margin-bottom:14px">
+    <div class="metric-card blue">
+      <div class="metric-lbl">Total Portfolio</div>
+      <div class="metric-val">${fmt(totalPortfolio)}</div>
+      <div class="metric-sub">${db.customers.length} customers</div>
+    </div>
+    <div class="metric-card green">
+      <div class="metric-lbl">Total Collected</div>
+      <div class="metric-val">${fmt(totalCollected)}</div>
+      <div class="metric-sub">incl. down payments</div>
+    </div>
+    <div class="metric-card red">
+      <div class="metric-lbl">Outstanding</div>
+      <div class="metric-val">${fmt(totalOutstanding)}</div>
+      <div class="metric-sub">${activeCount} active accounts</div>
+    </div>
+    <div class="metric-card amber">
+      <div class="metric-lbl">Inventory Value</div>
+      <div class="metric-val">${fmt(inventoryVal)}</div>
+      <div class="metric-sub">${lowStock} low stock alerts</div>
+    </div>
+  </div>
+  ${lateCount>0?`<div class="alert alert-danger" style="margin-bottom:14px">⚠️ ${lateCount} customer(s) have overdue installments — <a href="#" onclick="navigate('installments')" style="color:inherit;font-weight:600">View installments</a></div>`:''}
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="section-header"><div><div class="section-title">Active accounts</div><div class="section-sub">Installment progress</div></div></div>
+      ${db.customers.filter(c=>c.status!=='paid').map(c=>{
+        const pct = Math.min(100,Math.round((getPaid(c.id)/(c.salePrice-c.downPayment))*100));
+        return `<div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <div><span style="font-weight:500;font-size:12px">${c.name}</span> <span style="font-size:10px;color:var(--text3)">${c.bike}</span></div>
+            <div style="display:flex;align-items:center;gap:6px">${statusBadge(c.status)}<span style="font-size:11px;color:var(--text3)">${pct}%</span></div>
+          </div>
+          <div class="progress"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px">${fmt(getRemaining(c))} remaining</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card">
+      <div class="section-header"><div class="section-title">Recent payments</div></div>
+      <div class="table-wrap" style="border:none">
+        <table style="min-width:unset">
+          <thead><tr><th>Customer</th><th>Amount</th><th>Mode</th></tr></thead>
+          <tbody>
+            ${db.payments.slice(-6).reverse().map(p=>{
+              const c = db.customers.find(x=>x.id===p.customerId)||{name:'—'};
+              return `<tr><td class="td-bold">${c.name}<div class="td-sub">${p.month}</div></td><td class="c-green">${fmt(p.amount)}</td><td><span class="badge badge-gray">${p.mode}</span></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:14px">
+    <div class="metric-card purple" style="cursor:pointer" onclick="navigate('expenses')">
+      <div class="metric-lbl">This month expenses</div>
+      <div class="metric-val">${fmt(thisMonthExp)}</div>
+      <div class="metric-sub">Click to view all</div>
+    </div>
+    <div class="metric-card blue" style="cursor:pointer" onclick="navigate('suppliers')">
+      <div class="metric-lbl">Active suppliers</div>
+      <div class="metric-val">${db.suppliers.filter(s=>s.status==='active').length}</div>
+      <div class="metric-sub">${db.products.length} products listed</div>
+    </div>
+    <div class="metric-card green" style="cursor:pointer" onclick="navigate('advances')">
+      <div class="metric-lbl">Pending advances</div>
+      <div class="metric-val">${fmt(db.advances.filter(a=>a.type==='received'&&a.status!=='adjusted').reduce((s,a)=>s+(a.amount-a.adjustedAmount),0))}</div>
+      <div class="metric-sub">from customers</div>
+    </div>
+  </div>`;
+}
+
+// ==================== CUSTOMERS ====================
+function renderCustomers() {
+  return `
+  <div class="section-header">
+    <div><div class="section-title">All Customers</div><div class="section-sub">${db.customers.length} records</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showAddCustomer()">+ Add Customer</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Customer</th><th>Bike</th><th>Sale Price</th><th>Monthly</th><th>Paid</th><th>Remaining</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        ${db.customers.map(c=>`<tr>
+          <td><div class="td-bold">${c.name}</div><div class="td-sub">${c.phone}</div></td>
+          <td>${c.bike}<div class="td-sub">${c.bikeColor||''}</div></td>
+          <td>${fmt(c.salePrice)}</td>
+          <td>${fmt(getMonthly(c))}/mo</td>
+          <td>${db.payments.filter(p=>p.customerId===c.id).length}/${c.tenure}</td>
+          <td class="${getRemaining(c)>0?'c-red':'c-green'}">${fmt(getRemaining(c))}</td>
+          <td>${statusBadge(c.status)}</td>
+          <td><button class="btn btn-ghost btn-sm" onclick="showCustomerDetail(${c.id})">View</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddCustomer() {
+  openModal('Add New Customer', `
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="c-name" placeholder="Ahmed Ali"></div>
+      <div class="form-group"><label class="form-label">Phone *</label><input class="form-input" id="c-phone" placeholder="0300-1234567"></div>
+      <div class="form-group"><label class="form-label">CNIC</label><input class="form-input" id="c-cnic" placeholder="35202-1234567-1"></div>
+      <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="c-addr" placeholder="City / Area"></div>
+      <div class="form-group"><label class="form-label">Guarantor Name</label><input class="form-input" id="c-guar" placeholder="Guarantor name"></div>
+      <div class="form-group"><label class="form-label">Guarantor Phone</label><input class="form-input" id="c-gph" placeholder="0311-..."></div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Bike Model *</label><input class="form-input" id="c-bike" placeholder="Honda CD 70"></div>
+      <div class="form-group"><label class="form-label">Color</label><input class="form-input" id="c-color" placeholder="Red"></div>
+      <div class="form-group"><label class="form-label">Engine No.</label><input class="form-input" id="c-eng" placeholder="Engine number"></div>
+      <div class="form-group"><label class="form-label">Chassis No.</label><input class="form-input" id="c-chas" placeholder="Chassis number"></div>
+      <div class="form-group"><label class="form-label">Sale Price *</label><input class="form-input" id="c-price" type="number" placeholder="145000" oninput="calcCust()"></div>
+      <div class="form-group"><label class="form-label">Down Payment *</label><input class="form-input" id="c-down" type="number" placeholder="30000" oninput="calcCust()"></div>
+      <div class="form-group"><label class="form-label">Tenure (months) *</label><select class="form-input" id="c-tenure" onchange="calcCust()"><option value="6">6 months</option><option value="12" selected>12 months</option><option value="18">18 months</option><option value="24">24 months</option></select></div>
+      <div class="form-group"><label class="form-label">Sale Date</label><input class="form-input" id="c-date" type="date" value="${today()}"></div>
+    </div>
+    <div id="c-calc" class="form-calc" style="margin-top:8px">Monthly installment: —</div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>`);
+}
+
+function calcCust() {
+  const p=parseFloat(document.getElementById('c-price')?.value)||0;
+  const d=parseFloat(document.getElementById('c-down')?.value)||0;
+  const t=parseInt(document.getElementById('c-tenure')?.value)||12;
+  const m=Math.round((p-d)/t);
+  const el=document.getElementById('c-calc');
+  if(el) el.textContent=`Monthly: ${fmt(m)} × ${t} months = ${fmt(m*t)}`;
+}
+
+function saveCustomer() {
+  const name=document.getElementById('c-name')?.value.trim();
+  const phone=document.getElementById('c-phone')?.value.trim();
+  const bike=document.getElementById('c-bike')?.value.trim();
+  const salePrice=parseFloat(document.getElementById('c-price')?.value)||0;
+  if(!name||!phone||!bike||!salePrice){alert('Please fill Name, Phone, Bike and Sale Price');return;}
+  db.customers.push({
+    id:nextId('customers'),name,phone,
+    cnic:document.getElementById('c-cnic')?.value||'',
+    address:document.getElementById('c-addr')?.value||'',
+    guarantor:document.getElementById('c-guar')?.value||'',
+    guarantorPhone:document.getElementById('c-gph')?.value||'',
+    bike,bikeColor:document.getElementById('c-color')?.value||'',
+    engineNo:document.getElementById('c-eng')?.value||'',
+    chassisNo:document.getElementById('c-chas')?.value||'',
+    salePrice,downPayment:parseFloat(document.getElementById('c-down')?.value)||0,
+    tenure:parseInt(document.getElementById('c-tenure')?.value)||12,
+    startDate:document.getElementById('c-date')?.value||today(),
+    status:'active'
+  });
+  saveDB(); closeModal(); renderPage();
+}
+
+function showCustomerDetail(id) {
+  const c = db.customers.find(x=>x.id===id);
+  if(!c) return;
+  const pays = db.payments.filter(p=>p.customerId===id);
+  openModal(`${c.name} — Detail`, `
+    <div class="grid grid-2" style="margin-bottom:12px">
+      <div class="metric-card blue card-sm"><div class="metric-lbl">Sale Price</div><div class="metric-val" style="font-size:16px">${fmt(c.salePrice)}</div></div>
+      <div class="metric-card red card-sm"><div class="metric-lbl">Remaining</div><div class="metric-val" style="font-size:16px">${fmt(getRemaining(c))}</div></div>
+    </div>
+    <div style="font-size:12px;line-height:2;color:var(--text2)">
+      <div><span style="color:var(--text3)">Phone:</span> ${c.phone}</div>
+      <div><span style="color:var(--text3)">CNIC:</span> ${c.cnic||'—'}</div>
+      <div><span style="color:var(--text3)">Bike:</span> ${c.bike} ${c.bikeColor?'('+c.bikeColor+')':''}</div>
+      <div><span style="color:var(--text3)">Engine No:</span> ${c.engineNo||'—'}</div>
+      <div><span style="color:var(--text3)">Guarantor:</span> ${c.guarantor||'—'} ${c.guarantorPhone?'· '+c.guarantorPhone:''}</div>
+      <div><span style="color:var(--text3)">Monthly:</span> ${fmt(getMonthly(c))} × ${c.tenure} months</div>
+      <div><span style="color:var(--text3)">Paid installments:</span> ${pays.length}/${c.tenure}</div>
+      <div><span style="color:var(--text3)">Status:</span> ${statusBadge(c.status)}</div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text3)">Payment History</div>
+    ${pays.length===0?'<div style="color:var(--text3);font-size:12px">No payments recorded yet</div>':
+    pays.map(p=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <div><span style="color:var(--text2)">${p.month}</span> <span class="badge badge-gray">${p.mode}</span></div>
+      <div class="c-green">${fmt(p.amount)}</div>
+    </div>`).join('')}
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Close</button>
+     <button class="btn btn-primary" onclick="closeModal();showRecordPaymentFor(${id})">Record Payment</button>`);
+}
+
+// ==================== INSTALLMENTS ====================
+function renderInstallments() {
+  return `
+  <div class="section-header">
+    <div><div class="section-title">Installment Tracker</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showRecordPayment()">+ Record Payment</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Customer</th><th>Bike</th><th>Monthly</th><th>Paid</th><th>Remaining Inst.</th><th>Balance</th><th>Last Payment</th><th>Status</th></tr></thead>
+      <tbody>
+        ${db.customers.map(c=>{
+          const pays=db.payments.filter(p=>p.customerId===c.id);
+          const last=pays.slice(-1)[0];
+          return `<tr>
+            <td class="td-bold">${c.name}<div class="td-sub">${c.phone}</div></td>
+            <td>${c.bike}</td>
+            <td>${fmt(getMonthly(c))}</td>
+            <td>${pays.length}</td>
+            <td>${Math.max(0,c.tenure-pays.length)}</td>
+            <td class="${getRemaining(c)>0?'c-red':'c-green'}">${fmt(getRemaining(c))}</td>
+            <td>${last?last.date:'—'}</td>
+            <td>${statusBadge(c.status)}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showRecordPayment() {
+  const opts = db.customers.filter(c=>c.status!=='paid').map(c=>`<option value="${c.id}">${c.name} — ${c.bike} (${fmt(getMonthly(c))}/mo)</option>`).join('');
+  openModal('Record Installment Payment',`
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Customer</label>
+      <select class="form-input" id="rp-c" onchange="fillPayInfo()">${opts}</select>
+    </div>
+    <div id="rp-info"></div>
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Amount (Rs)</label><input class="form-input" id="rp-amt" type="number"></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="rp-date" type="date" value="${today()}"></div>
+      <div class="form-group"><label class="form-label">Month</label><input class="form-input" id="rp-month" placeholder="Mar 2025"></div>
+      <div class="form-group"><label class="form-label">Mode</label><select class="form-input" id="rp-mode"><option value="cash">Cash</option><option value="easypaisa">Easypaisa</option><option value="jazzcash">JazzCash</option><option value="bank">Bank Transfer</option><option value="cheque">Cheque</option></select></div>
+    </div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="savePayment()">Save Payment</button>`);
+  setTimeout(fillPayInfo,100);
+}
+
+function showRecordPaymentFor(cId) {
+  showRecordPayment();
+  setTimeout(()=>{
+    const sel=document.getElementById('rp-c');
+    if(sel){sel.value=cId;fillPayInfo();}
+  },150);
+}
+
+function fillPayInfo() {
+  const cId=parseInt(document.getElementById('rp-c')?.value);
+  const c=db.customers.find(x=>x.id===cId);
+  if(!c) return;
+  const monthly=getMonthly(c);
+  const rem=getRemaining(c);
+  document.getElementById('rp-amt').value=monthly;
+  document.getElementById('rp-info').innerHTML=`<div class="form-calc" style="margin-bottom:12px">Monthly: ${fmt(monthly)} · Balance: ${fmt(rem)} · ${db.payments.filter(p=>p.customerId===cId).length}/${c.tenure} paid</div>`;
+}
+
+function savePayment() {
+  const cId=parseInt(document.getElementById('rp-c')?.value);
+  const amt=parseFloat(document.getElementById('rp-amt')?.value)||0;
+  const date=document.getElementById('rp-date')?.value;
+  const month=document.getElementById('rp-month')?.value||monthStr(date);
+  const mode=document.getElementById('rp-mode')?.value;
+  if(!amt){alert('Enter amount');return;}
+  db.payments.push({id:nextId('payments'),customerId:cId,amount:amt,date,month,mode,notes:''});
+  db.cashEntries.push({id:nextId('cashEntries'),date,type:'in',category:'installment',desc:`Installment — ${db.customers.find(x=>x.id===cId)?.name} (${month})`,amount:amt,ref:`INS-${cId}`});
+  const c=db.customers.find(x=>x.id===cId);
+  if(c&&db.payments.filter(p=>p.customerId===cId).length>=c.tenure) c.status='paid';
+  saveDB(); closeModal(); renderPage();
+}
+
+// ==================== RECEIVABLE ====================
+function renderReceivable() {
+  const months=['Jan 2025','Feb 2025','Mar 2025','Apr 2025','May 2025','Jun 2025','Jul 2025','Aug 2025','Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026'];
+  const totalDue=db.customers.reduce((s,c)=>s+getMonthly(c),0);
+  const totalRecv=db.payments.filter(p=>p.month===currentMonth).reduce((s,p)=>s+p.amount,0);
+  return `
+  <div class="month-pills">
+    ${months.slice(-5).map(m=>`<button class="month-pill ${m===currentMonth?'active':''}" onclick="currentMonth='${m}';renderPage()">${m}</button>`).join('')}
+  </div>
+  <div class="grid grid-4" style="margin-bottom:14px">
+    <div class="metric-card blue"><div class="metric-lbl">Total Due</div><div class="metric-val">${fmt(totalDue)}</div></div>
+    <div class="metric-card green"><div class="metric-lbl">Received</div><div class="metric-val">${fmt(totalRecv)}</div></div>
+    <div class="metric-card red"><div class="metric-lbl">Overdue</div><div class="metric-val">${fmt(Math.max(0,totalDue-totalRecv))}</div></div>
+    <div class="metric-card amber"><div class="metric-lbl">Collection %</div><div class="metric-val">${totalDue>0?Math.round((totalRecv/totalDue)*100):0}%</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">${currentMonth} — Receivable Register</div>
+    <button class="btn btn-primary btn-sm" onclick="showRecordPayment()">+ Record</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Customer</th><th>Bike</th><th>Due</th><th>Received</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        ${db.customers.map(c=>{
+          const due=getMonthly(c);
+          const recv=db.payments.filter(p=>p.customerId===c.id&&p.month===currentMonth).reduce((s,p)=>s+p.amount,0);
+          const bal=due-recv;
+          const st=recv>=due?'paid':recv>0?'partial':'late';
+          return `<tr>
+            <td class="td-bold">${c.name}<div class="td-sub">${c.phone}</div></td>
+            <td>${c.bike}</td>
+            <td>${fmt(due)}</td>
+            <td class="c-green">${recv>0?fmt(recv):'—'}</td>
+            <td class="${bal>0?'c-red':'c-green'}">${bal>0?fmt(bal):'Clear'}</td>
+            <td>${statusBadge(st)}</td>
+            <td>${bal>0?`<button class="btn btn-ghost btn-sm" onclick="quickPay(${c.id})">Pay</button>`:''}</td>
+          </tr>`;
+        }).join('')}
+        <tr class="tfoot-row">
+          <td colspan="2">Total</td>
+          <td>${fmt(totalDue)}</td>
+          <td class="c-green">${fmt(totalRecv)}</td>
+          <td class="${totalDue-totalRecv>0?'c-red':'c-green'}">${totalDue-totalRecv>0?fmt(totalDue-totalRecv):'Clear'}</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function quickPay(cId) {
+  currentPage='receivable';
+  showRecordPaymentFor(cId);
+}
+
+// ==================== CASH BOOK ====================
+function renderCashbook() {
+  const filtered=db.cashEntries.filter(e=>monthStr(e.date)===currentMonth).sort((a,b)=>a.date.localeCompare(b.date));
+  let bal=0;
+  const totalIn=filtered.filter(e=>e.type==='in').reduce((s,e)=>s+e.amount,0);
+  const totalOut=filtered.filter(e=>e.type==='out').reduce((s,e)=>s+e.amount,0);
+  return `
+  <div class="month-pills">
+    ${['Jan 2025','Feb 2025','Mar 2025'].map(m=>`<button class="month-pill ${m===currentMonth?'active':''}" onclick="currentMonth='${m}';renderPage()">${m}</button>`).join('')}
+  </div>
+  <div class="grid grid-3" style="margin-bottom:14px">
+    <div class="metric-card green"><div class="metric-lbl">Cash In</div><div class="metric-val">${fmt(totalIn)}</div></div>
+    <div class="metric-card red"><div class="metric-lbl">Cash Out</div><div class="metric-val">${fmt(totalOut)}</div></div>
+    <div class="metric-card blue"><div class="metric-lbl">Net Balance</div><div class="metric-val" class="${totalIn-totalOut>=0?'c-green':'c-red'}">${fmt(totalIn-totalOut)}</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">Cash Book — ${currentMonth}</div>
+    <button class="btn btn-primary btn-sm" onclick="showAddCashEntry()">+ Add Entry</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Ref</th><th>Description</th><th>Type</th><th>Cash In</th><th>Cash Out</th><th>Balance</th></tr></thead>
+      <tbody>
+        ${filtered.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px">No entries for ${currentMonth}</td></tr>`:''}
+        ${filtered.map(e=>{
+          if(e.type==='in') bal+=e.amount; else bal-=e.amount;
+          return `<tr>
+            <td>${e.date}</td>
+            <td style="color:var(--text3)">${e.ref||'—'}</td>
+            <td class="td-bold">${e.desc}</td>
+            <td><span class="badge ${e.type==='in'?'badge-green':'badge-red'}">${e.category}</span></td>
+            <td class="c-green">${e.type==='in'?fmt(e.amount):'—'}</td>
+            <td class="c-red">${e.type==='out'?fmt(e.amount):'—'}</td>
+            <td style="font-weight:600;color:${bal>=0?'var(--green)':'var(--red)'}">${fmt(bal)}</td>
+          </tr>`;
+        }).join('')}
+        <tr class="tfoot-row"><td colspan="4">Total</td><td class="c-green">${fmt(totalIn)}</td><td class="c-red">${fmt(totalOut)}</td><td style="font-weight:600;color:${totalIn-totalOut>=0?'var(--green)':'var(--red)'}">${fmt(totalIn-totalOut)}</td></tr>
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddCashEntry() {
+  openModal('Add Cash Book Entry',`
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Type</label><select class="form-input" id="ce-t"><option value="in">Cash In (Receipt)</option><option value="out">Cash Out (Payment)</option></select></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="ce-cat"><option value="installment">Installment</option><option value="sale">Bike Sale</option><option value="advance">Advance</option><option value="supplier">Supplier Payment</option><option value="expense">Expense</option><option value="other">Other</option></select></div>
+      <div class="form-group"><label class="form-label">Amount (Rs)</label><input class="form-input" id="ce-amt" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="ce-date" type="date" value="${today()}"></div>
+      <div class="form-group"><label class="form-label">Reference No.</label><input class="form-input" id="ce-ref" placeholder="INV-001"></div>
+      <div class="form-group"><label class="form-label">Mode</label><select class="form-input" id="ce-mode"><option>cash</option><option>bank</option><option>easypaisa</option><option>cheque</option></select></div>
+    </div>
+    <div class="form-group" style="margin-top:8px"><label class="form-label">Description</label><input class="form-input" id="ce-desc" placeholder="Details of this transaction"></div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveCashEntry()">Save</button>`);
+}
+
+function saveCashEntry() {
+  const amt=parseFloat(document.getElementById('ce-amt')?.value)||0;
+  const desc=document.getElementById('ce-desc')?.value.trim();
+  if(!amt||!desc){alert('Enter amount and description');return;}
+  db.cashEntries.push({id:nextId('cashEntries'),date:document.getElementById('ce-date')?.value,type:document.getElementById('ce-t')?.value,category:document.getElementById('ce-cat')?.value,desc,amount:amt,ref:document.getElementById('ce-ref')?.value});
+  saveDB();closeModal();renderPage();
+}
+
+// ==================== EXPENSES ====================
+const expCats={rent:'Rent',salary:'Salary',utility:'Utilities',transport:'Transport',repair:'Repair',marketing:'Marketing',other:'Other'};
+function renderExpenses() {
+  const filtered=db.expenses.filter(e=>monthStr(e.date)===currentMonth);
+  const total=filtered.reduce((s,e)=>s+e.amount,0);
+  const byCat=Object.entries(expCats).map(([k,v])=>({k,v,amt:filtered.filter(e=>e.category===k).reduce((s,e)=>s+e.amount,0)})).filter(x=>x.amt>0);
+  return `
+  <div class="month-pills">
+    ${['Jan 2025','Feb 2025','Mar 2025'].map(m=>`<button class="month-pill ${m===currentMonth?'active':''}" onclick="currentMonth='${m}';renderPage()">${m}</button>`).join('')}
+  </div>
+  <div class="grid grid-2" style="margin-bottom:14px">
+    <div class="metric-card red"><div class="metric-lbl">Total Expenses</div><div class="metric-val">${fmt(total)}</div><div class="metric-sub">${filtered.length} entries</div></div>
+    <div class="card" style="padding:12px">
+      ${byCat.slice(0,4).map(x=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:var(--text3)">${x.v}</span><span style="color:var(--text2);font-weight:500">${fmt(x.amt)}</span></div>`).join('')}
+    </div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">Expenses — ${currentMonth}</div>
+    <button class="btn btn-primary btn-sm" onclick="showAddExpense()">+ Add Expense</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Mode</th><th>Amount</th><th>Action</th></tr></thead>
+      <tbody>
+        ${filtered.length===0?`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px">No expenses for ${currentMonth}</td></tr>`:''}
+        ${filtered.map((e,i)=>`<tr>
+          <td>${e.date}</td>
+          <td><span class="badge badge-amber">${expCats[e.category]||e.category}</span></td>
+          <td class="td-bold">${e.desc}</td>
+          <td style="color:var(--text3)">${e.payMode||'cash'}</td>
+          <td class="c-red">${fmt(e.amount)}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${e.id})">Del</button></td>
+        </tr>`).join('')}
+        ${filtered.length>0?`<tr class="tfoot-row"><td colspan="4">Total</td><td class="c-red">${fmt(total)}</td><td></td></tr>`:''}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddExpense() {
+  openModal('Add Expense',`
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="ex-cat">${Object.entries(expCats).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Amount (Rs)</label><input class="form-input" id="ex-amt" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="ex-date" type="date" value="${today()}"></div>
+      <div class="form-group"><label class="form-label">Mode</label><select class="form-input" id="ex-mode"><option value="cash">Cash</option><option value="bank">Bank</option><option value="easypaisa">Easypaisa</option></select></div>
+    </div>
+    <div class="form-group" style="margin-top:8px"><label class="form-label">Description</label><input class="form-input" id="ex-desc" placeholder="e.g. Shop rent March 2025"></div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExpense()">Save</button>`);
+}
+
+function saveExpense() {
+  const amt=parseFloat(document.getElementById('ex-amt')?.value)||0;
+  const desc=document.getElementById('ex-desc')?.value.trim();
+  if(!amt||!desc){alert('Enter amount and description');return;}
+  const exp={id:nextId('expenses'),date:document.getElementById('ex-date')?.value,category:document.getElementById('ex-cat')?.value,desc,amount:amt,payMode:document.getElementById('ex-mode')?.value};
+  db.expenses.push(exp);
+  db.cashEntries.push({id:nextId('cashEntries'),date:exp.date,type:'out',category:'expense',desc,amount:amt,ref:`EXP-${exp.id}`});
+  saveDB();closeModal();renderPage();
+}
+
+function deleteExpense(id) {
+  if(!confirm('Delete this expense?')) return;
+  db.expenses=db.expenses.filter(e=>e.id!==id);
+  saveDB();renderPage();
+}
+
+// ==================== SUPPLIERS ====================
+function renderSuppliers() {
+  return `
+  <div class="section-header">
+    <div><div class="section-title">Suppliers</div><div class="section-sub">${db.suppliers.length} records</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showAddSupplier()">+ Add Supplier</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Company</th><th>Contact</th><th>Phone</th><th>City</th><th>Payment Terms</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        ${db.suppliers.map(s=>`<tr>
+          <td class="td-bold">${s.name}<div class="td-sub">${s.email||''}</div></td>
+          <td>${s.contact||'—'}</td>
+          <td>${s.phone}</td>
+          <td>${s.city||'—'}</td>
+          <td><span class="badge badge-gray">${s.paymentTerms||'Cash'}</span></td>
+          <td>${statusBadge(s.status)}</td>
+          <td><button class="btn btn-ghost btn-sm" onclick="deleteSupplier(${s.id})">Del</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddSupplier() {
+  openModal('Add Supplier',`
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Company Name *</label><input class="form-input" id="s-name" placeholder="Honda Atlas Pakistan"></div>
+      <div class="form-group"><label class="form-label">Contact Person</label><input class="form-input" id="s-contact" placeholder="Name"></div>
+      <div class="form-group"><label class="form-label">Phone *</label><input class="form-input" id="s-phone" placeholder="042-12345678"></div>
+      <div class="form-group"><label class="form-label">City</label><input class="form-input" id="s-city" placeholder="Lahore"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="s-email" placeholder="email@company.pk"></div>
+      <div class="form-group"><label class="form-label">NTN</label><input class="form-input" id="s-ntn" placeholder="NTN number"></div>
+      <div class="form-group"><label class="form-label">Payment Terms</label><select class="form-input" id="s-terms"><option>Cash</option><option>7 days</option><option>15 days</option><option>30 days</option><option>60 days</option></select></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="s-status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+    </div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSupplier()">Save</button>`);
+}
+
+function saveSupplier() {
+  const name=document.getElementById('s-name')?.value.trim();
+  if(!name){alert('Enter company name');return;}
+  db.suppliers.push({id:nextId('suppliers'),name,contact:document.getElementById('s-contact')?.value||'',phone:document.getElementById('s-phone')?.value||'',city:document.getElementById('s-city')?.value||'',email:document.getElementById('s-email')?.value||'',ntn:document.getElementById('s-ntn')?.value||'',paymentTerms:document.getElementById('s-terms')?.value||'Cash',status:document.getElementById('s-status')?.value||'active',notes:''});
+  saveDB();closeModal();renderPage();
+}
+
+function deleteSupplier(id){if(!confirm('Delete supplier?'))return;db.suppliers=db.suppliers.filter(s=>s.id!==id);saveDB();renderPage();}
+
+// ==================== PRODUCTS ====================
+function renderProducts() {
+  const lowStock=db.products.filter(p=>p.stock<=p.minStock);
+  return `
+  ${lowStock.length>0?`<div class="alert alert-warn" style="margin-bottom:12px">⚠️ ${lowStock.length} product(s) are low/out of stock: ${lowStock.map(p=>p.name).join(', ')}</div>`:''}
+  <div class="section-header">
+    <div><div class="section-title">Products & Inventory</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showAddProduct()">+ Add Product</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Product</th><th>Category</th><th>Supplier</th><th>Buy Price</th><th>Sell Price</th><th>Margin</th><th>Stock</th><th>Status</th></tr></thead>
+      <tbody>
+        ${db.products.map(p=>{
+          const margin=Math.round(((p.salePrice-p.purchasePrice)/p.purchasePrice)*100);
+          const stockSt=p.stock===0?'badge-red':p.stock<=p.minStock?'badge-amber':'badge-green';
+          const stockLbl=p.stock===0?'Out of stock':p.stock<=p.minStock?'Low stock':'In stock';
+          return `<tr>
+            <td class="td-bold">${p.name}<div class="td-sub">${p.notes||''}</div></td>
+            <td><span class="badge badge-blue">${p.category}</span></td>
+            <td style="color:var(--text3)">${getSupplier(p.supplierId).name}</td>
+            <td>${fmt(p.purchasePrice)}</td>
+            <td>${fmt(p.salePrice)}</td>
+            <td class="c-green">${margin}%</td>
+            <td>${p.stock} ${p.unit}(s)</td>
+            <td><span class="badge ${stockSt}">${stockLbl}</span></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddProduct() {
+  const sOpts=db.suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  openModal('Add Product',`
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Product Name *</label><input class="form-input" id="p-name" placeholder="Honda CD 70"></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="p-cat"><option value="bike">Bike</option><option value="parts">Parts</option><option value="oil">Oil/Lubricants</option><option value="other">Other</option></select></div>
+      <div class="form-group"><label class="form-label">Supplier</label><select class="form-input" id="p-sup">${sOpts}</select></div>
+      <div class="form-group"><label class="form-label">Unit</label><select class="form-input" id="p-unit"><option value="unit">Unit</option><option value="piece">Piece</option><option value="set">Set</option><option value="bottle">Bottle</option></select></div>
+      <div class="form-group"><label class="form-label">Purchase Price</label><input class="form-input" id="p-buy" type="number" placeholder="0" oninput="calcProd()"></div>
+      <div class="form-group"><label class="form-label">Sale Price</label><input class="form-input" id="p-sell" type="number" placeholder="0" oninput="calcProd()"></div>
+      <div class="form-group"><label class="form-label">Current Stock</label><input class="form-input" id="p-stock" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Min Stock Alert</label><input class="form-input" id="p-min" type="number" placeholder="2"></div>
+    </div>
+    <div id="p-margin" class="form-calc" style="margin-top:8px">Profit margin: —</div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveProduct()">Save</button>`);
+}
+
+function calcProd(){
+  const b=parseFloat(document.getElementById('p-buy')?.value)||0;
+  const s=parseFloat(document.getElementById('p-sell')?.value)||0;
+  if(b&&s){const m=Math.round(((s-b)/b)*100);document.getElementById('p-margin').textContent=`Profit: ${fmt(s-b)} per unit · Margin: ${m}%`;}
+}
+
+function saveProduct(){
+  const name=document.getElementById('p-name')?.value.trim();
+  if(!name){alert('Enter product name');return;}
+  db.products.push({id:nextId('products'),supplierId:parseInt(document.getElementById('p-sup')?.value)||1,name,category:document.getElementById('p-cat')?.value,purchasePrice:parseFloat(document.getElementById('p-buy')?.value)||0,salePrice:parseFloat(document.getElementById('p-sell')?.value)||0,stock:parseInt(document.getElementById('p-stock')?.value)||0,unit:document.getElementById('p-unit')?.value,minStock:parseInt(document.getElementById('p-min')?.value)||2,notes:''});
+  saveDB();closeModal();renderPage();
+}
+
+// ==================== ADVANCES ====================
+function renderAdvances() {
+  const received=db.advances.filter(a=>a.type==='received');
+  const paid=db.advances.filter(a=>a.type==='paid');
+  const pendingAdv=received.filter(a=>a.status!=='adjusted').reduce((s,a)=>s+(a.amount-a.adjustedAmount),0);
+  const pendingPaid=paid.reduce((s,a)=>s+(a.amount-a.adjustedAmount),0);
+  return `
+  <div class="grid grid-2" style="margin-bottom:14px">
+    <div class="metric-card green"><div class="metric-lbl">Advances Received (pending)</div><div class="metric-val">${fmt(pendingAdv)}</div></div>
+    <div class="metric-card red"><div class="metric-lbl">Advances Paid (pending)</div><div class="metric-val">${fmt(pendingPaid)}</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">All Advances</div>
+    <button class="btn btn-primary btn-sm" onclick="showAddAdvance()">+ Record Advance</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type</th><th>Name</th><th>Purpose</th><th>Amount</th><th>Adjusted</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        ${db.advances.map(a=>`<tr>
+          <td><span class="badge ${a.type==='received'?'badge-green':'badge-red'}">${a.type}</span></td>
+          <td class="td-bold">${a.name}<div class="td-sub">${a.date}</div></td>
+          <td style="color:var(--text3)">${a.purpose}</td>
+          <td>${fmt(a.amount)}</td>
+          <td class="c-green">${fmt(a.adjustedAmount)}</td>
+          <td class="${a.amount-a.adjustedAmount>0?'c-red':'c-green'}">${fmt(a.amount-a.adjustedAmount)}</td>
+          <td>${statusBadge(a.status)}</td>
+          <td>${a.status!=='adjusted'?`<button class="btn btn-ghost btn-sm" onclick="adjustAdv(${a.id})">Adjust</button>`:''}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function showAddAdvance(){
+  openModal('Record Advance',`
+    <div class="form-grid form-grid-2">
+      <div class="form-group"><label class="form-label">Type</label><select class="form-input" id="a-t"><option value="received">Received from Customer</option><option value="paid">Paid to Supplier</option></select></div>
+      <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="a-name" placeholder="Customer/Supplier name"></div>
+      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="a-phone" placeholder="0300-..."></div>
+      <div class="form-group"><label class="form-label">Amount (Rs) *</label><input class="form-input" id="a-amt" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="a-date" type="date" value="${today()}"></div>
+    </div>
+    <div class="form-group" style="margin-top:8px"><label class="form-label">Purpose</label><input class="form-input" id="a-purpose" placeholder="e.g. Booking for Honda CD 70"></div>
+  `,`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveAdvance()">Save</button>`);
+}
+
+function saveAdvance(){
+  const name=document.getElementById('a-name')?.value.trim();
+  const amt=parseFloat(document.getElementById('a-amt')?.value)||0;
+  if(!name||!amt){alert('Enter name and amount');return;}
+  db.advances.push({id:nextId('advances'),type:document.getElementById('a-t')?.value,name,phone:document.getElementById('a-phone')?.value||'',amount:amt,adjustedAmount:0,date:document.getElementById('a-date')?.value,purpose:document.getElementById('a-purpose')?.value||'',status:'pending'});
+  saveDB();closeModal();renderPage();
+}
+
+function adjustAdv(id){
+  const a=db.advances.find(x=>x.id===id);
+  if(!a) return;
+  const amt=parseFloat(prompt(`Adjust amount from this advance?\nTotal: ${fmt(a.amount)}\nBalance: ${fmt(a.amount-a.adjustedAmount)}`)||0);
+  if(amt>0){
+    a.adjustedAmount=Math.min(a.amount,a.adjustedAmount+amt);
+    a.status=a.adjustedAmount>=a.amount?'adjusted':'partial';
+    saveDB();renderPage();
+  }
+}
+
+// ==================== REPORTS ====================
+function renderReports() {
+  const totalSales=db.customers.reduce((s,c)=>s+c.salePrice,0);
+  const totalCost=db.customers.reduce((s,c)=>{const p=db.products.find(x=>x.name===c.bike);return s+(p?p.purchasePrice:0);},0);
+  const totalCollected=db.customers.reduce((s,c)=>s+getPaid(c.id)+c.downPayment,0);
+  const totalOutstanding=db.customers.reduce((s,c)=>s+getRemaining(c),0);
+  const totalExpenses=db.expenses.reduce((s,e)=>s+e.amount,0);
+  const grossProfit=totalSales-totalCost;
+  const netProfit=grossProfit-totalExpenses;
+  const inventoryVal=db.products.reduce((s,p)=>s+p.purchasePrice*p.stock,0);
+  return `
+  <div class="grid grid-4" style="margin-bottom:14px">
+    <div class="metric-card blue"><div class="metric-lbl">Total Sales</div><div class="metric-val">${fmt(totalSales)}</div></div>
+    <div class="metric-card green"><div class="metric-lbl">Gross Profit</div><div class="metric-val">${fmt(grossProfit)}</div><div class="metric-sub">${totalSales>0?Math.round((grossProfit/totalSales)*100):0}% margin</div></div>
+    <div class="metric-card purple"><div class="metric-lbl">Net Profit</div><div class="metric-val">${fmt(netProfit)}</div><div class="metric-sub">after expenses</div></div>
+    <div class="metric-card amber"><div class="metric-lbl">Inventory Value</div><div class="metric-val">${fmt(inventoryVal)}</div></div>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Product profitability</div>
+      <div class="table-wrap" style="border:none">
+        <table style="min-width:unset">
+          <thead><tr><th>Product</th><th>Buy</th><th>Sell</th><th>Margin</th><th>Stock</th></tr></thead>
+          <tbody>${db.products.map(p=>`<tr>
+            <td class="td-bold">${p.name}</td>
+            <td>${fmt(p.purchasePrice)}</td>
+            <td>${fmt(p.salePrice)}</td>
+            <td class="c-green">${Math.round(((p.salePrice-p.purchasePrice)/p.purchasePrice)*100)}%</td>
+            <td>${p.stock}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Customer summary</div>
+      <div class="table-wrap" style="border:none">
+        <table style="min-width:unset">
+          <thead><tr><th>Customer</th><th>Sale</th><th>Remaining</th><th>Status</th></tr></thead>
+          <tbody>${db.customers.map(c=>`<tr>
+            <td class="td-bold">${c.name}</td>
+            <td>${fmt(c.salePrice)}</td>
+            <td class="${getRemaining(c)>0?'c-red':'c-green'}">${fmt(getRemaining(c))}</td>
+            <td>${statusBadge(c.status)}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="section-title" style="margin-bottom:12px">Expense summary by category</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+      ${Object.entries(expCats).map(([k,v])=>{
+        const amt=db.expenses.filter(e=>e.category===k).reduce((s,e)=>s+e.amount,0);
+        return amt>0?`<div class="metric-card amber card-sm"><div class="metric-lbl">${v}</div><div class="metric-val" style="font-size:16px">${fmt(amt)}</div></div>`:'';
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+// ==================== IMPORT ====================
+function renderImport() {
+  return `
+  <div class="alert alert-info" style="margin-bottom:14px">Import your old data from Excel files. Download the template, fill your records, and upload to load everything automatically.</div>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:8px">Download Excel Template</div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">Get a ready-made Excel file with 5 sheets: Customers, Payments, Suppliers, Products, Expenses. Fill your old data and upload below.</p>
+      <button class="btn btn-primary" onclick="downloadTemplate()">⬇ Download Template</button>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:8px">Upload Filled Excel</div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">Upload your filled Excel file and it will automatically load all records into the system.</p>
+      <input type="file" id="import-file" accept=".xlsx,.xls" style="display:none" onchange="handleImport(this)">
+      <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Upload Excel File</button>
+    </div>
+  </div>
+  <div id="import-result"></div>
+  <div class="card" style="margin-top:14px">
+    <div class="section-title" style="margin-bottom:8px">Data Storage Info</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.8">
+      <div>✅ All your data is saved permanently in this browser's local storage</div>
+      <div>✅ Data survives closing and reopening the app</div>
+      <div>✅ Works offline — no internet needed after first load</div>
+      <div>⚠️ Clearing browser data / cache will erase records — export regularly as backup</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="exportData()">⬇ Export All Data to Excel</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑 Clear All Data</button>
+    </div>
+  </div>`;
+}
+
+function downloadTemplate() {
+  if(typeof XLSX==='undefined'){alert('Please wait for the page to fully load.');return;}
+  const wb=XLSX.utils.book_new();
+  const sheets={
+    Customers:[['id','name','cnic','phone','address','guarantor','guarantor_phone','bike','bike_color','engine_no','chassis_no','sale_price','down_payment','tenure','start_date','status'],[1,'Ahmed Ali','35202-1234567-1','0300-1234567','Lahore','Tariq','0311-111','Honda CD 70','Red','EN123','CH456',145000,30000,12,'2024-08-01','active']],
+    Payments:[['id','customer_id','amount','date','month','mode','notes'],[1,1,9583,'2024-09-01','Sep 2024','cash','']],
+    Suppliers:[['id','name','contact','phone','city','email','ntn','payment_terms','status'],[1,'Honda Atlas','Malik Tariq','042-35123456','Lahore','','','30 days','active']],
+    Products:[['id','supplier_id','name','category','purchase_price','sale_price','stock','unit','min_stock'],[1,1,'Honda CD 70','bike',112000,125000,5,'unit',2]],
+    Expenses:[['id','date','category','description','amount','pay_mode'],[1,'2024-01-05','rent','Shop rent Jan',25000,'cash']],
+  };
+  Object.entries(sheets).forEach(([name,data])=>{
+    const ws=XLSX.utils.aoa_to_sheet(data);
+    ws['!cols']=data[0].map(()=>({wch:18}));
+    XLSX.utils.book_append_sheet(wb,ws,name);
+  });
+  XLSX.writeFile(wb,'BhuttaAutos_Template.xlsx');
+}
+
+function handleImport(input) {
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      let imported={customers:0,payments:0,suppliers:0,products:0,expenses:0};
+      const map={Customers:'customers',Payments:'payments',Suppliers:'suppliers',Products:'products',Expenses:'expenses'};
+      wb.SheetNames.forEach(sn=>{
+        const key=map[sn]; if(!key) return;
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{defval:''});
+        if(key==='customers') rows.forEach(r=>{if(r.name&&r.phone){db.customers.push({id:nextId('customers'),name:r.name||'',cnic:r.cnic||'',phone:r.phone||'',address:r.address||'',guarantor:r.guarantor||'',guarantorPhone:r.guarantor_phone||'',bike:r.bike||'',bikeColor:r.bike_color||'',engineNo:r.engine_no||'',chassisNo:r.chassis_no||'',salePrice:+r.sale_price||0,downPayment:+r.down_payment||0,tenure:+r.tenure||12,startDate:r.start_date||today(),status:r.status||'active'});imported.customers++;}});
+        if(key==='payments') rows.forEach(r=>{if(r.amount){db.payments.push({id:nextId('payments'),customerId:+r.customer_id||0,amount:+r.amount||0,date:r.date||today(),month:r.month||'',mode:r.mode||'cash',notes:r.notes||''});imported.payments++;}});
+        if(key==='suppliers') rows.forEach(r=>{if(r.name){db.suppliers.push({id:nextId('suppliers'),name:r.name||'',contact:r.contact||'',phone:r.phone||'',city:r.city||'',email:r.email||'',ntn:r.ntn||'',paymentTerms:r.payment_terms||'Cash',status:r.status||'active',notes:''});imported.suppliers++;}});
+        if(key==='products') rows.forEach(r=>{if(r.name){db.products.push({id:nextId('products'),supplierId:+r.supplier_id||1,name:r.name||'',category:r.category||'bike',purchasePrice:+r.purchase_price||0,salePrice:+r.sale_price||0,stock:+r.stock||0,unit:r.unit||'unit',minStock:+r.min_stock||2,notes:''});imported.products++;}});
+        if(key==='expenses') rows.forEach(r=>{if(r.description&&r.amount){db.expenses.push({id:nextId('expenses'),date:r.date||today(),category:r.category||'other',desc:r.description||'',amount:+r.amount||0,payMode:r.pay_mode||'cash'});imported.expenses++;}});
+      });
+      saveDB();
+      document.getElementById('import-result').innerHTML=`<div class="alert alert-success" style="margin-top:12px">Import successful! Customers: ${imported.customers}, Payments: ${imported.payments}, Suppliers: ${imported.suppliers}, Products: ${imported.products}, Expenses: ${imported.expenses}</div>`;
+    }catch(err){
+      document.getElementById('import-result').innerHTML=`<div class="alert alert-danger" style="margin-top:12px">Error reading file: ${err.message}</div>`;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function exportData() {
+  if(typeof XLSX==='undefined'){alert('Please wait for page to load fully.');return;}
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.customers),'Customers');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.payments),'Payments');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.suppliers),'Suppliers');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.products),'Products');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.expenses),'Expenses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.cashEntries),'CashBook');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.advances),'Advances');
+  XLSX.writeFile(wb,`BhuttaAutos_Export_${today()}.xlsx`);
+}
+
+function clearAllData(){
+  if(!confirm('Are you sure? This will delete ALL data permanently!')) return;
+  if(!confirm('Last warning — all customers, payments, expenses will be deleted. Continue?')) return;
+  localStorage.removeItem(DB_KEY);
+  db=getDefaultDB();
+  saveDB();
+  alert('All data cleared. Sample data loaded.');
+  renderPage();
+}
+
+
+// ==================== GOOGLE SHEETS SYNC ====================
+const SYNC_KEY = 'bhuttaautos_sheets_config';
+
+function getSyncConfig() {
+  try { return JSON.parse(localStorage.getItem(SYNC_KEY)||'{}'); } catch(e) { return {}; }
+}
+function saveSyncConfig(cfg) {
+  localStorage.setItem(SYNC_KEY, JSON.stringify(cfg));
+}
+
+// Auto-sync after every save
+const _origSaveDB = saveDB;
+let syncTimer = null;
+saveDB = function() {
+  _origSaveDB();
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(()=>{ if(getSyncConfig().scriptUrl) pushToSheets(); }, 2000);
+};
+
+async function pushToSheets() {
+  const cfg = getSyncConfig();
+  if(!cfg.scriptUrl) return;
+  try {
+    const payload = {
+      action: 'push',
+      data: {
+        customers: db.customers,
+        payments: db.payments,
+        suppliers: db.suppliers,
+        products: db.products,
+        expenses: db.expenses,
+        advances: db.advances,
+        cashEntries: db.cashEntries,
+        nextId: db.nextId,
+        lastSync: new Date().toISOString()
+      }
+    };
+    const resp = await fetch(cfg.scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    updateSyncStatus('pushed');
+  } catch(e) {
+    updateSyncStatus('error', e.message);
+  }
+}
+
+async function pullFromSheets() {
+  const cfg = getSyncConfig();
+  if(!cfg.scriptUrl) { alert('Please configure Google Sheets sync first.'); showSyncSettings(); return; }
+  updateSyncStatus('pulling');
+  try {
+    const url = cfg.scriptUrl + '?action=pull&t=' + Date.now();
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if(data && data.customers) {
+      db = data;
+      saveDB();
+      updateSyncStatus('pulled');
+      renderPage();
+      showSyncToast('Data pulled from Google Sheets!');
+    } else {
+      updateSyncStatus('error', 'No data found');
+    }
+  } catch(e) {
+    updateSyncStatus('error', e.message);
+  }
+}
+
+function updateSyncStatus(state, msg) {
+  const el = document.getElementById('sync-status-dot');
+  const txt = document.getElementById('sync-status-text');
+  if(!el || !txt) return;
+  const states = {
+    pushed: ['#10b981','Synced'],
+    pulled: ['#10b981','Updated'],
+    pulling: ['#f59e0b','Syncing...'],
+    error: ['#ef4444','Sync Error'],
+    connected: ['#10b981','Connected'],
+    offline: ['#6b7280','Not connected'],
+  };
+  const [color, label] = states[state] || ['#6b7280', state];
+  el.style.background = color;
+  txt.textContent = label + (msg ? ': '+msg.slice(0,30) : '');
+}
+
+function showSyncToast(msg) {
+  let t = document.getElementById('sync-toast');
+  if(!t) {
+    t = document.createElement('div');
+    t.id = 'sync-toast';
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 20px;border-radius:8px;font-size:12px;font-weight:600;z-index:999;transition:opacity 0.3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 3000);
+}
+
+function showSyncSettings() {
+  const cfg = getSyncConfig();
+  openModal('Google Sheets Sync Setup', `
+    <div class="alert alert-info" style="margin-bottom:14px">Connect to Google Sheets so Amir Bhai and Zain Bhai both see the same live data from any phone.</div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Step 1 — Create Google Apps Script</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:10px">
+        1. Go to <strong style="color:#60a5fa">script.google.com</strong><br>
+        2. Click <strong>New Project</strong><br>
+        3. Delete all existing code<br>
+        4. Copy and paste the code below<br>
+        5. Click <strong>Save</strong> (Ctrl+S)<br>
+        6. Click <strong>Deploy → New Deployment</strong><br>
+        7. Type: <strong>Web App</strong><br>
+        8. Execute as: <strong>Me</strong><br>
+        9. Who has access: <strong>Anyone</strong><br>
+        10. Click <strong>Deploy</strong> → Copy the URL
+      </div>
+      <div style="background:#0d1117;border-radius:8px;padding:12px;font-family:monospace;font-size:10px;color:#e6edf3;border:1px solid #30363d;max-height:200px;overflow-y:auto;line-height:1.6">
+const SHEET_NAME = 'BhuttaAutosData';<br>
+<br>
+function doPost(e) {<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const body = JSON.parse(e.postData.contents);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (body.action === 'push') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;saveData(body.data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;} catch(err) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON);<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+function doGet(e) {<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (e.parameter.action === 'pull') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = loadData();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;} catch(err) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON);<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+function saveData(data) {<br>
+&nbsp;&nbsp;const ss = SpreadsheetApp.getActiveSpreadsheet();<br>
+&nbsp;&nbsp;let sheet = ss.getSheetByName(SHEET_NAME);<br>
+&nbsp;&nbsp;if (!sheet) sheet = ss.insertSheet(SHEET_NAME);<br>
+&nbsp;&nbsp;sheet.clearContents();<br>
+&nbsp;&nbsp;sheet.getRange(1,1).setValue(JSON.stringify(data));<br>
+}<br>
+<br>
+function loadData() {<br>
+&nbsp;&nbsp;const ss = SpreadsheetApp.getActiveSpreadsheet();<br>
+&nbsp;&nbsp;const sheet = ss.getSheetByName(SHEET_NAME);<br>
+&nbsp;&nbsp;if (!sheet) return {};<br>
+&nbsp;&nbsp;const val = sheet.getRange(1,1).getValue();<br>
+&nbsp;&nbsp;return val ? JSON.parse(val) : {};<br>
+}
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="copyGASCode()">Copy Script Code</button>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Step 2 — Paste your Web App URL here</div>
+      <input class="form-input" id="sync-url" placeholder="https://script.google.com/macros/s/.../exec" value="${cfg.scriptUrl||''}">
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Step 3 — Create a Google Sheet</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        1. Go to <strong style="color:#60a5fa">sheets.google.com</strong><br>
+        2. Create a new blank spreadsheet<br>
+        3. Name it: <strong>Bhutta Autos Data</strong><br>
+        4. Go back to your Apps Script → click <strong>Resources → Spreadsheet</strong> and link this sheet<br>
+        (or open Apps Script from inside the Google Sheet directly)
+      </div>
+    </div>
+
+    <div class="alert alert-success">Once connected — any change on Amir Bhai's phone syncs to Zain Bhai's phone automatically within seconds!</div>
+  `, `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-ghost btn-sm" onclick="testSyncConnection()">Test Connection</button>
+    <button class="btn btn-primary" onclick="saveSyncUrl()">Save & Connect</button>
+  `);
+}
+
+function copyGASCode() {
+  const code = `const SHEET_NAME = 'BhuttaAutosData';
+
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    if (body.action === 'push') {
+      saveData(body.data);
+      return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  try {
+    if (e.parameter.action === 'pull') {
+      const data = loadData();
+      return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function saveData(data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
+  sheet.clearContents();
+  sheet.getRange(1,1).setValue(JSON.stringify(data));
+}
+
+function loadData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) return {};
+  const val = sheet.getRange(1,1).getValue();
+  return val ? JSON.parse(val) : {};
+}`;
+  navigator.clipboard.writeText(code).then(()=>showSyncToast('Script code copied!')).catch(()=>alert('Copy manually from the code box above'));
+}
+
+function saveSyncUrl() {
+  const url = document.getElementById('sync-url')?.value.trim();
+  if(!url || !url.includes('script.google.com')) { alert('Please enter a valid Google Apps Script URL'); return; }
+  saveSyncConfig({ scriptUrl: url, connectedAt: new Date().toISOString() });
+  updateSyncStatus('connected');
+  closeModal();
+  showSyncToast('Google Sheets connected! Pushing data now...');
+  pushToSheets();
+}
+
+async function testSyncConnection() {
+  const url = document.getElementById('sync-url')?.value.trim();
+  if(!url) { alert('Enter URL first'); return; }
+  showSyncToast('Testing connection...');
+  try {
+    const resp = await fetch(url + '?action=pull&t=' + Date.now());
+    const data = await resp.json();
+    showSyncToast('Connection successful!');
+  } catch(e) {
+    showSyncToast('Connection test done (no-cors mode)');
+  }
+}
+
+// ---- Inject sync bar into topbar ----
+function injectSyncBar() {
+  const cfg = getSyncConfig();
+  const connected = !!cfg.scriptUrl;
+  const bar = document.createElement('div');
+  bar.id = 'sync-bar';
+  bar.style.cssText = 'background:#0f172a;border-bottom:1px solid rgba(255,255,255,0.06);padding:4px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap';
+  bar.innerHTML = `
+    <div style="display:flex;align-items:center;gap:6px;flex:1">
+      <div id="sync-status-dot" style="width:7px;height:7px;border-radius:50%;background:${connected?'#10b981':'#6b7280'};flex-shrink:0"></div>
+      <span id="sync-status-text" style="font-size:10px;color:#94a3b8">${connected?'Google Sheets Connected':'Not connected'}</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button onclick="pullFromSheets()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);border-radius:6px;color:#34d399;font-size:10px;padding:3px 10px;cursor:pointer;font-family:inherit">⬇ Pull</button>
+      <button onclick="pushToSheets()" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.25);border-radius:6px;color:#60a5fa;font-size:10px;padding:3px 10px;cursor:pointer;font-family:inherit">⬆ Push</button>
+      <button onclick="showSyncSettings()" style="background:rgba(148,163,184,0.1);border:1px solid rgba(148,163,184,0.15);border-radius:6px;color:#94a3b8;font-size:10px;padding:3px 10px;cursor:pointer;font-family:inherit">⚙ Sync Settings</button>
+    </div>`;
+  const mainDiv = document.querySelector('.main');
+  if(mainDiv) mainDiv.insertBefore(bar, mainDiv.firstChild);
+}
+
+// ==================== INIT ====================
+navigate('dashboard');
+injectSyncBar();
+</script>
+</body>
+</html>
